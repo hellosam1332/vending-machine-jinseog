@@ -11,6 +11,7 @@ type State = {
   insertCash: (cash: Cash) => void;
   returnCash: () => Record<Cash, number>;
   setPaymentMethod: (method: PaymentMethod) => void;
+  reset: () => void;
 };
 
 const defaultState: State = {
@@ -22,6 +23,7 @@ const defaultState: State = {
   insertCash: () => {},
   returnCash: () => ({ 100: 0, 500: 0, 1000: 0, 5000: 0, 10000: 0 }),
   setPaymentMethod: () => {},
+  reset: () => {},
 };
 
 export const VendingMachineContext = createContext<State>(defaultState);
@@ -89,6 +91,12 @@ export const VendingMachineProvider = ({
           }
 
           setPaymentMethod(method);
+        },
+        reset: () => {
+          setPurchasedDrinks(defaultState.purchasedDrinks);
+          setCash(defaultState.cash);
+          setInsertedCash(defaultState.insertedCash);
+          setPaymentMethod(defaultState.paymentMethod);
         },
       }}
     >

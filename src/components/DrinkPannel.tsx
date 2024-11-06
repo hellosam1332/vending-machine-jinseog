@@ -33,7 +33,7 @@ function DrinkPannel({ availableDrinks }: Props) {
       >
         {availableDrinks.map((drink) => (
           <li key={drink.name}>
-            <h3>{`${name} ${drink.emoji}`}</h3>
+            <h3>{`${drink.name} ${drink.emoji}`}</h3>
             <p>가격: {drink.price.toLocaleString()}</p>
             <button
               type="button"
