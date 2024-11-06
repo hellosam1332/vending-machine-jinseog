@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { VendingMachineContext } from "../contexts/VendingMachineContext";
 
 function PaymentSelection() {
-  const { cash, paymentMethod, setPaymentMethod } = useContext(
+  const { cash, paymentMethod, setPaymentMethod, returnCash } = useContext(
     VendingMachineContext
   );
 
@@ -38,7 +38,15 @@ function PaymentSelection() {
           />
           Card
         </label>
-        <button disabled={balance === 0}>잔액반환</button>
+        <button
+          disabled={balance === 0}
+          onClick={() => {
+            const returned = returnCash();
+            alert("반환된 잔액: " + JSON.stringify(returned));
+          }}
+        >
+          잔액반환
+        </button>
       </div>
     </section>
   );
