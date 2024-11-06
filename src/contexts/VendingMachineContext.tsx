@@ -75,7 +75,21 @@ export const VendingMachineProvider = ({
           setInsertedCash({ 100: 0, 500: 0, 1000: 0, 5000: 0, 10000: 0 });
           return result;
         },
-        setPaymentMethod: (method: PaymentMethod) => setPaymentMethod(method),
+        setPaymentMethod: (method: PaymentMethod) => {
+          if (method === "card") {
+            const balance = Object.entries(insertedCash).reduce(
+              (acc, [key, value]) => acc + Number(key) * value,
+              0
+            );
+
+            if (balance > 0) {
+              alert("카드 결제는 잔액이 0원일 때만 가능합니다.");
+              return;
+            }
+          }
+
+          setPaymentMethod(method);
+        },
       }}
     >
       {children}
