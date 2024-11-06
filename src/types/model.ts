@@ -5,3 +5,5 @@ export type Drink = {
 };
 
 export type PaymentMethod = "card" | "cash";
+
+export type Cash = 100 | 500 | 1000 | 5000 | 10000;
