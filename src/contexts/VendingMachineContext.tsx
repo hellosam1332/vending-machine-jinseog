@@ -1,21 +1,21 @@
 import { createContext, ReactNode, useState } from "react";
-import { Drink, PaymentMethod } from "../types/model";
+import { Cash, Drink, PaymentMethod } from "../types/model";
 
 type State = {
   purchasedDrinks: Drink[];
-  balance: number;
+  cash: Record<Cash, number>;
   paymentMethod: PaymentMethod;
   addPurchasedDrinks: (item: Drink) => void;
-  addBalance: (amount: number) => void;
+  insertCash: (cash: Cash) => void;
   setPaymentMethod: (method: PaymentMethod) => void;
 };
 
 const defaultState: State = {
   purchasedDrinks: [],
-  balance: 0,
+  cash: { 100: 0, 500: 0, 1000: 0, 5000: 0, 10000: 0 },
   paymentMethod: "cash",
   addPurchasedDrinks: () => {},
-  addBalance: () => {},
+  insertCash: () => {},
   setPaymentMethod: () => {},
 };
 
@@ -27,18 +27,22 @@ export const VendingMachineProvider = ({
   children: ReactNode;
 }) => {
   const [purchasedDrinks, setPurchasedDrinks] = useState<Drink[]>([]);
-  const [balance, setBalance] = useState<number>(0);
+  const [cash, setCash] = useState<Record<Cash, number>>(defaultState.cash);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
 
   return (
     <VendingMachineContext.Provider
       value={{
         purchasedDrinks,
-        balance,
+        cash,
         paymentMethod,
         addPurchasedDrinks: (item: Drink) =>
           setPurchasedDrinks((prev) => [...prev, item]),
-        addBalance: (amount: number) => setBalance((prev) => prev + amount),
+        insertCash: (cash: Cash) =>
+          setCash((prev) => ({
+            ...prev,
+            [cash]: prev[cash] + 1,
+          })),
         setPaymentMethod: (method: PaymentMethod) => setPaymentMethod(method),
       }}
     >

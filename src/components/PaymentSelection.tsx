@@ -2,8 +2,13 @@ import { useContext } from "react";
 import { VendingMachineContext } from "../contexts/VendingMachineContext";
 
 function PaymentSelection() {
-  const { balance, paymentMethod, setPaymentMethod } = useContext(
+  const { cash, paymentMethod, setPaymentMethod } = useContext(
     VendingMachineContext
+  );
+
+  const balance = Object.entries(cash).reduce(
+    (acc, [key, value]) => acc + Number(key) * value,
+    0
   );
 
   return (
