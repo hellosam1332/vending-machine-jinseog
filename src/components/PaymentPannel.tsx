@@ -1,9 +1,15 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { VendingMachineContext } from "../contexts/VendingMachineContext";
 import { PaymentMethod, Cash } from "../types/model";
 
 function PaymentPannel() {
-  const { paymentMethod } = useContext(VendingMachineContext);
+  const { cash, paymentMethod, insertCash } = useContext(VendingMachineContext);
+
+  const balance = Object.entries(cash).reduce(
+    (acc, [key, value]) => acc + Number(key) * value,
+    0
+  );
+
   return (
     <section>
       <h2>{PAYMENT_TITLE[paymentMethod]}</h2>
@@ -15,18 +21,38 @@ function PaymentPannel() {
           alignItems: "center",
         }}
       >
-        {paymentMethod === "cash" ? <CashPannel /> : <CardPannel />}
+        {paymentMethod === "cash" ? (
+          <CashPannel
+            balance={balance}
+            onInsertCash={(cash: Cash) => insertCash(cash)}
+          />
+        ) : (
+          <CardPannel />
+        )}
       </div>
     </section>
   );
 }
 
-function CashPannel() {
+function CashPannel({
+  balance,
+  onInsertCash,
+}: {
+  balance: number;
+  onInsertCash: (cash: Cash) => void;
+}) {
+  const [selectedCash, setSelectedCash] = useState("");
   const cashOptions: Cash[] = [100, 500, 1000, 5000, 10000];
 
   return (
     <>
-      <select defaultValue="" onChange={(e) => console.log(e.target.value)}>
+      <select
+        value={selectedCash}
+        onChange={(e) => {
+          onInsertCash(e.target.value as unknown as Cash);
+          setSelectedCash("");
+        }}
+      >
         <option value="" disabled>
           금액선택
         </option>
@@ -36,7 +62,7 @@ function CashPannel() {
           </option>
         ))}
       </select>
-      <h3>잔액 : 0 원</h3>
+      <h3>잔액 : {balance} 원</h3>
     </>
   );
 }
