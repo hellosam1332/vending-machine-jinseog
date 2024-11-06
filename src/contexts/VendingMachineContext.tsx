@@ -1,11 +1,13 @@
 import { createContext, ReactNode, useState } from "react";
 import { Cash, Drink, PaymentMethod } from "../types/model";
+import { vendingMachineCalculator } from "../lib/vending-machine-calculator";
 
 type State = {
   purchasedDrinks: Drink[];
+  insertedCash: Record<Cash, number>;
   cash: Record<Cash, number>;
   paymentMethod: PaymentMethod;
-  addPurchasedDrinks: (item: Drink) => void;
+  purchaseDrink: (drink: Drink) => void;
   insertCash: (cash: Cash) => void;
   returnCash: () => Record<Cash, number>;
   setPaymentMethod: (method: PaymentMethod) => void;
@@ -13,9 +15,10 @@ type State = {
 
 const defaultState: State = {
   purchasedDrinks: [],
-  cash: { 100: 0, 500: 0, 1000: 0, 5000: 0, 10000: 0 },
+  insertedCash: { 100: 0, 500: 0, 1000: 0, 5000: 0, 10000: 0 },
+  cash: { 100: 999, 500: 999, 1000: 999, 5000: 999, 10000: 999 },
   paymentMethod: "cash",
-  addPurchasedDrinks: () => {},
+  purchaseDrink: () => {},
   insertCash: () => {},
   returnCash: () => ({ 100: 0, 500: 0, 1000: 0, 5000: 0, 10000: 0 }),
   setPaymentMethod: () => {},
@@ -32,6 +35,9 @@ export const VendingMachineProvider = ({
     defaultState.purchasedDrinks
   );
   const [cash, setCash] = useState<Record<Cash, number>>(defaultState.cash);
+  const [insertedCash, setInsertedCash] = useState<Record<Cash, number>>(
+    defaultState.insertedCash
+  );
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(
     defaultState.paymentMethod
   );
@@ -41,17 +47,32 @@ export const VendingMachineProvider = ({
       value={{
         purchasedDrinks,
         cash,
+        insertedCash,
         paymentMethod,
-        addPurchasedDrinks: (item: Drink) =>
-          setPurchasedDrinks((prev) => [...prev, item]),
+        purchaseDrink: (drink: Drink) => {
+          if (paymentMethod === "cash") {
+            const { inserted, remaining } =
+              vendingMachineCalculator.calculateRemainingCash({
+                price: drink.price,
+                inserted: insertedCash,
+                remaining: cash,
+              });
+
+            setInsertedCash(inserted);
+            setCash(remaining);
+          }
+
+          setPurchasedDrinks((prev) => [...prev, drink]);
+        },
+
         insertCash: (cash: Cash) =>
-          setCash((prev) => ({
+          setInsertedCash((prev) => ({
             ...prev,
             [cash]: prev[cash] + 1,
           })),
         returnCash: () => {
-          const result = { ...cash };
-          setCash({ 100: 0, 500: 0, 1000: 0, 5000: 0, 10000: 0 });
+          const result = { ...insertedCash };
+          setInsertedCash({ 100: 0, 500: 0, 1000: 0, 5000: 0, 10000: 0 });
           return result;
         },
         setPaymentMethod: (method: PaymentMethod) => setPaymentMethod(method),

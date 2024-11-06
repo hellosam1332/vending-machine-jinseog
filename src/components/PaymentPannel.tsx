@@ -3,9 +3,11 @@ import { VendingMachineContext } from "../contexts/VendingMachineContext";
 import { PaymentMethod, Cash } from "../types/model";
 
 function PaymentPannel() {
-  const { cash, paymentMethod, insertCash } = useContext(VendingMachineContext);
+  const { insertedCash, paymentMethod, insertCash } = useContext(
+    VendingMachineContext
+  );
 
-  const balance = Object.entries(cash).reduce(
+  const balance = Object.entries(insertedCash).reduce(
     (acc, [key, value]) => acc + Number(key) * value,
     0
   );
@@ -62,7 +64,7 @@ function CashPannel({
           </option>
         ))}
       </select>
-      <h3>잔액 : {balance} 원</h3>
+      <h3>잔액 : {balance.toLocaleString()} 원</h3>
     </>
   );
 }
