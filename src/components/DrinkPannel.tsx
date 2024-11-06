@@ -7,7 +7,7 @@ type Props = {
 };
 
 function DrinkPannel({ availableDrinks }: Props) {
-  const { insertedCash, paymentMethod, purchaseDrink } = useContext(
+  const { insertedCash, paymentMethod, purchaseDrink, creditCard } = useContext(
     VendingMachineContext
   );
 
@@ -37,7 +37,10 @@ function DrinkPannel({ availableDrinks }: Props) {
             <p>가격: {drink.price.toLocaleString()}</p>
             <button
               type="button"
-              disabled={paymentMethod === "cash" && balance < drink.price}
+              disabled={
+                (paymentMethod === "cash" && balance < drink.price) ||
+                (paymentMethod === "card" && creditCard.status === "pending")
+              }
               onClick={() => purchaseDrink(drink)}
             >
               Get!

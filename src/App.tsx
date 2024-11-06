@@ -10,9 +10,7 @@ function App() {
     <main>
       <DrinkPannel availableDrinks={AVAILABLE_DRINKS} />
       <PaymentSelection />
-      {/* Cash Selection*/}
       <PaymentPannel />
-      {/* User */}
       <UserSection />
     </main>
   );

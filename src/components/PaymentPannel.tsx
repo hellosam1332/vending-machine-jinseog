@@ -1,9 +1,9 @@
 import { useContext, useState } from "react";
 import { VendingMachineContext } from "../contexts/VendingMachineContext";
-import { PaymentMethod, Cash } from "../types/model";
+import { PaymentMethod, Cash, CreditCardStatus } from "../types/model";
 
 function PaymentPannel() {
-  const { insertedCash, paymentMethod, insertCash } = useContext(
+  const { insertedCash, paymentMethod, insertCash, creditCard } = useContext(
     VendingMachineContext
   );
 
@@ -29,7 +29,7 @@ function PaymentPannel() {
             onInsertCash={(cash: Cash) => insertCash(cash)}
           />
         ) : (
-          <CardPannel />
+          <CardPannel status={creditCard.status} />
         )}
       </div>
     </section>
@@ -69,10 +69,10 @@ function CashPannel({
   );
 }
 
-function CardPannel() {
+function CardPannel({ status }: { status: CreditCardStatus }) {
   return (
     <>
-      <h3>카드 상태: 승인중</h3>
+      <h3>카드 상태: {CREATE_CARD_STATUS[status]}</h3>
     </>
   );
 }
@@ -80,6 +80,12 @@ function CardPannel() {
 const PAYMENT_TITLE: Record<PaymentMethod, string> = {
   card: "카드",
   cash: "현금",
+} as const;
+
+const CREATE_CARD_STATUS: Record<CreditCardStatus, string> = {
+  pending: "승인 대기 중",
+  authorized: "승인 완료",
+  declined: "승인 거부",
 } as const;
 
 export default PaymentPannel;
