@@ -3,3 +3,5 @@ export type Drink = {
   emoji: string;
   price: number;
 };
+
+export type PaymentMethod = "card" | "cash";
