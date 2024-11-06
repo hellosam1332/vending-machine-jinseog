@@ -1,42 +1,11 @@
 import "./App.css";
+import DrinkPannel from "./components/DrinkPannel";
+import { AVAILABLE_DRINKS } from "./constants";
 
 function App() {
   return (
     <main>
-      {/* Drink Pannel */}
-      <section>
-        <h2>음료선택</h2>
-        <ul
-          style={{
-            display: "flex",
-            gap: "10px",
-            padding: 0,
-            listStyle: "none",
-          }}
-        >
-          <li>
-            <div>
-              <h3>콜라 🥤</h3>
-              <p>가격: 1100</p>
-              <button>Get!</button>
-            </div>
-          </li>
-          <li>
-            <div>
-              <h3>물 💧</h3>
-              <p>가격: 600</p>
-              <button>Get!</button>
-            </div>
-          </li>
-          <li>
-            <div>
-              <h3>커피 ☕️</h3>
-              <p>가격: 700</p>
-              <button>Get!</button>
-            </div>
-          </li>
-        </ul>
-      </section>
+      <DrinkPannel availableDrinks={AVAILABLE_DRINKS} />
       {/* Payment Selection */}
       <section>
         <h2>결제</h2>
