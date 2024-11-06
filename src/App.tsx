@@ -1,33 +1,13 @@
 import "./App.css";
 import DrinkPannel from "./components/DrinkPannel";
+import PaymentSelection from "./components/PaymentSelection";
 import { AVAILABLE_DRINKS } from "./constants";
 
 function App() {
   return (
     <main>
       <DrinkPannel availableDrinks={AVAILABLE_DRINKS} />
-      {/* Payment Selection */}
-      <section>
-        <h2>결제</h2>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "10px",
-          }}
-        >
-          <label>
-            <input type="radio" />
-            Cash
-          </label>
-          <label>
-            <input type="radio" />
-            Card
-          </label>
-          <button>잔액반환</button>
-        </div>
-      </section>
+      <PaymentSelection />
       {/* Cash Selection*/}
       <section>
         <h2>현금</h2>
